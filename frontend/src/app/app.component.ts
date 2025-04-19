@@ -11,6 +11,8 @@ import {
   UmlClassifierShapeModel
 } from '@syncfusion/ej2-diagrams';
 import { ExpandMode } from '@syncfusion/ej2-navigations';
+import { User } from './user';
+import { UserService } from './user-service.service';
 
 
 @Component({
@@ -20,6 +22,16 @@ import { ExpandMode } from '@syncfusion/ej2-navigations';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+
+  users: User[] = [];
+
+  constructor(private userService: UserService) {
+    this.userService.findAll().subscribe((users) => {
+      this.users = users;
+      console.log("Users received", this.users);
+    });
+  }
+
   title = 'frontend';
   @ViewChild('diagram')
   public diagram!: DiagramComponent;
@@ -310,138 +322,26 @@ export class AppComponent {
 
   public nodes: NodeModel[] = [
     {
-      id: 'Patient',
+      id: 'Persona',
       shape: {
         type: 'UmlClassifier',
         classShape: {
-          name: 'Patient',
+          name: 'Persona',
           attributes: [
-            this.createProperty('accepted', 'Date'),
-            this.createProperty('sickness', 'History'),
-            this.createProperty('prescription', 'String[*]'),
-            this.createProperty('allergies', 'String[*]')
+            this.createProperty('Nombre', 'String[*]'),
+            this.createProperty('Apellido', 'String[*]'),
+            this.createProperty('FechaNacimiento', 'Date'),
           ],
-          methods: [this.createMethods('getHistory', 'History')]
+          methods: [this.createMethods('getEdad', 'Int')]
         },
         classifier: 'Class'
       } as UmlClassifierShapeModel,
       offsetX: 200,
       offsetY: 250
     },
-    {
-      id: 'Doctor',
-      shape: {
-        type: 'UmlClassifier',
-        classShape: {
-          name: 'Doctor',
-          attributes: [
-            this.createProperty('specialist', 'String[*]'),
-            this.createProperty('locations', 'String[*]')
-          ]
-        },
-        classifier: 'Class'
-      } as UmlClassifierShapeModel,
-      offsetX: 240,
-      offsetY: 545
-    },
-    {
-      id: 'Person',
-      shape: {
-        type: 'UmlClassifier',
-        classShape: {
-          name: 'Person',
-          attributes: [
-            this.createProperty('name', 'Name'),
-            this.createProperty('title', 'String[*]'),
-            this.createProperty('gender', 'Gender')
-          ]
-        },
-        classifier: 'Class'
-      } as UmlClassifierShapeModel,
-      offsetX: 405,
-      offsetY: 105
-    },
-    {
-      id: 'Hospital',
-      shape: {
-        type: 'UmlClassifier',
-        classShape: {
-          name: 'Hospital',
-          attributes: [
-            this.createProperty('name', 'Name'),
-            this.createProperty('address', 'Address'),
-            this.createProperty('phone', 'Phone')
-          ],
-          methods: [this.createMethods('getDepartment', 'String')]
-        },
-        classifier: 'Class'
-      } as UmlClassifierShapeModel,
-      offsetX: 638,
-      offsetY: 100
-    },
-    {
-      id: 'Department',
-      shape: {
-        type: 'UmlClassifier',
-        classShape: {
-          name: 'Department',
-          methods: [this.createMethods('getStaffCount', 'Int')]
-        },
-        classifier: 'Class'
-      } as UmlClassifierShapeModel,
-      offsetX: 638,
-      offsetY: 280
-    },
-    {
-      id: 'Staff',
-      shape: {
-        type: 'UmlClassifier',
-        classShape: {
-          name: 'Staff',
-          attributes: [
-            this.createProperty('joined', 'Date'),
-            this.createProperty('education', 'string[*]'),
-            this.createProperty('certification', 'string[*]'),
-            this.createProperty('languages', 'string[*]')
-          ],
-          methods: [
-            this.createMethods('isDoctor', 'bool'),
-            this.createMethods('getHistory', 'bool')
-          ]
-        },
-        classifier: 'Class'
-      } as UmlClassifierShapeModel,
-      offsetX: 635,
-      offsetY: 455
-    },
-    this.createNode('OperationStaff', 410, 455, 'OperationStaff'),
-    this.createNode('Nurse', 410, 545, 'Nurse'),
-    this.createNode('Surgeon', 240, 665, 'Surgeon'),
-    this.createNode('AdministrativeStaff', 632, 605, 'AdministrativeStaff'),
-    this.createNode('FrontDeskStaff', 630, 695, 'FrontDeskStaff'),
-    this.createNode('TechnicalStaff', 928, 445, 'TechnicalStaff'),
-    this.createNode('Technician', 815, 535, 'Technician'),
-    this.createNode('Technologist', 1015, 535, 'Technologist'),
-    this.createNode('SurgicalTechnologist', 1015, 630, 'SurgicalTechnologist')
   ];
 
   public connectors: ConnectorModel[] = [
-    this.createConnector('connect1', 'Patient', 'Person'),
-    this.createConnector('connect2', 'Person', 'Hospital'),
-    this.createConnector('connect3', 'Department', 'Hospital'),
-    this.createConnector('connect4', 'OperationStaff', 'Patient'),
-    this.createConnector('connect5', 'Doctor', 'OperationStaff'),
-    this.createConnector('connect6', 'Nurse', 'OperationStaff'),
-    this.createConnector('connect7', 'Surgeon', 'Doctor'),
-    this.createConnector('connect8', 'FrontDeskStaff', 'AdministrativeStaff'),
-    this.createConnector('connect9', 'Technician', 'TechnicalStaff'),
-    this.createConnector('connect10', 'Technologist', 'TechnicalStaff'),
-    this.createConnector('connect11', 'SurgicalTechnologist', 'Technologist'),
-    this.createConnector('connect12', 'Staff', 'Department'),
-    this.createConnector('connect13', 'Staff', 'Person'),
-    this.createConnector('connect14', 'OperationStaff', 'Staff'),
-    this.createConnector('connect15', 'AdministrativeStaff', 'Staff'),
-    this.createConnector('connect16', 'TechnicalStaff', 'Staff')
   ];
 
   // Set the default values of nodes.
