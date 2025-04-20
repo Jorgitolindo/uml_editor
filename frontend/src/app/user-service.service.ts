@@ -16,4 +16,12 @@ export class UserService {
   public findAll(): Observable<User[]> {
     return this.http.get<User[]>(this.usersUrl);
   }
+
+  public sendDiagram(username: string, diagram: any): Observable<void> {
+    return this.http.post<void>(this.usersUrl + `/${username}/diagram`, diagram);
+  }
+
+  public getDiagram(username: string): Observable<any> {
+    return this.http.get<any>(this.usersUrl + `/${username}/diagram`);
+  }
 }

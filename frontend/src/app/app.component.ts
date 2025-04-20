@@ -24,10 +24,15 @@ import { UserService } from './user-service.service';
 export class AppComponent {
 
   users: User[] = [];
+  currentUser?: User;
 
   constructor(private userService: UserService) {
     this.userService.findAll().subscribe((users) => {
       this.users = users;
+      this.currentUser = users[0];
+      this.userService.getDiagram(this.currentUser!!.username!!).subscribe((d) => {
+        this.diagram.loadDiagram(d);
+      });
       console.log("Users received", this.users);
     });
   }
@@ -320,26 +325,7 @@ export class AppComponent {
     }
   ];
 
-  public nodes: NodeModel[] = [
-    {
-      id: 'Persona',
-      shape: {
-        type: 'UmlClassifier',
-        classShape: {
-          name: 'Persona',
-          attributes: [
-            this.createProperty('Nombre', 'String[*]'),
-            this.createProperty('Apellido', 'String[*]'),
-            this.createProperty('FechaNacimiento', 'Date'),
-          ],
-          methods: [this.createMethods('getEdad', 'Int')]
-        },
-        classifier: 'Class'
-      } as UmlClassifierShapeModel,
-      offsetX: 200,
-      offsetY: 250
-    },
-  ];
+  public nodes: NodeModel[] = [];
 
   public connectors: ConnectorModel[] = [
   ];
@@ -349,9 +335,11 @@ export class AppComponent {
     obj.style = { fill: '#26A0DA', strokeColor: 'white' };
     return obj;
   }
+
   public created(): void {
     this.diagram.fitToPage();
   }
+
   // Set the default values of connectors.
   public getConnectorDefaults(connector: ConnectorModel): ConnectorModel {
     return connector;
@@ -415,5 +403,12 @@ export class AppComponent {
   // create class Methods
   public createMethods(name: string, type: string): object {
     return { name: name, type: type };
+  }
+
+  saveDiagram() {
+    const data = JSON.parse(this.diagram.saveDiagram());
+    this.userService.sendDiagram(this.currentUser!!.username!!, data).subscribe(() => {
+      console.log('Diagram sent to backend')
+    })
   }
 }

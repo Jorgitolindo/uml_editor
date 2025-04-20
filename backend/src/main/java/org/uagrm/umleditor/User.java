@@ -1,3 +1,3 @@
 package org.uagrm.umleditor;
 
-public record User(String username) {}
+public record User(String username, String fullName) {}
