@@ -44,7 +44,7 @@ export class AppComponent {
   public expandMode: ExpandMode = 'Multiple';
   public palettes: PaletteModel[] = [
     {
-      id: 'UmlActivity', expanded: true, title: 'UML Classifier Nodes', symbols: [
+      id: 'UmlActivity', expanded: true, title: 'clases de uml', symbols: [
         {
           id: 'class',
           style: {
