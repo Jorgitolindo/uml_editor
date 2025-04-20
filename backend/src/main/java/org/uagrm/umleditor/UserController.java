@@ -32,7 +32,6 @@ public class UserController {
     @PostMapping("/users/{username}/diagram")
     public void uploadDiagram(@PathVariable("username") String username, @RequestBody Map<String, Object> diagram) {
         log.info("Data received for " + username);
-        log.info("Data " + diagram);
         userRepository.saveDiagram(username, diagram);
     }
 
