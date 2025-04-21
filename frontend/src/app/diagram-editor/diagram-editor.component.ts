@@ -40,7 +40,7 @@ export class DiagramEditorComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Connect to the WebSocket server
     const location = window.location;
-    const socket = new SockJS('http://' + location.host + '/ws');
+    const socket = new SockJS(location.protocol + '//' + location.host + '/ws');
     this.stompClient = Stomp.over(socket);
     this.stompClient.connect({}, () => {
       this.stompClient.subscribe(`/topic/notifications`, (message: any) => {
