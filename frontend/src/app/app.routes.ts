@@ -9,4 +9,5 @@ export const routes: Routes = [
     { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'editor/:id', component: DiagramEditorComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/home', pathMatch: 'full' }, // Redirect empty path to home
+    { path: '**', redirectTo: '/home', pathMatch: 'full' } // Redirect any unknown path to home
 ];

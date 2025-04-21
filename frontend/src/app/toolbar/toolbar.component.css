@@ -1,0 +1,14 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: x-large;
+}
+
+.menu-left{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}

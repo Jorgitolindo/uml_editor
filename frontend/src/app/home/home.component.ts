@@ -4,10 +4,11 @@ import { AuthenticationService } from '../auth.service';
 import { User } from '../user';
 import { UserService } from '../user.service';
 import { RouterModule } from '@angular/router';
+import { ToolbarComponent } from "../toolbar/toolbar.component";
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ToolbarComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

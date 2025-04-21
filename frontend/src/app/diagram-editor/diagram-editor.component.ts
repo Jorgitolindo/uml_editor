@@ -10,16 +10,15 @@ import {
   UndoRedo
 } from '@syncfusion/ej2-diagrams';
 import { ExpandMode } from '@syncfusion/ej2-navigations';
-import { User } from '../user';
 import { UserService } from '../user.service';
-import { AuthenticationService } from '../auth.service';
 import { ActivatedRoute } from '@angular/router';
+import { ToolbarComponent } from "../toolbar/toolbar.component";
 
 Diagram.Inject(UndoRedo); // add support for history management
 
 @Component({
   selector: 'app-diagram-editor',
-  imports: [DiagramModule, SymbolPaletteModule],
+  imports: [DiagramModule, SymbolPaletteModule, ToolbarComponent],
   templateUrl: './diagram-editor.component.html',
   styleUrl: './diagram-editor.component.css'
 })
