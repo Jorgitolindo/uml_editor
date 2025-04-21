@@ -45,7 +45,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) ->
                         requests.requestMatchers("/ws").permitAll()
                                 .requestMatchers("/ws/**").permitAll()
-                                .anyRequest().authenticated()
+                                .requestMatchers("/api").authenticated()
+                                .requestMatchers("/api/**").authenticated()
+                                .anyRequest().permitAll()
                 ).logout((logout) -> logout.permitAll())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
