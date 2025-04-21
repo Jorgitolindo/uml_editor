@@ -33,29 +33,43 @@ public class UserRepository {
         return users;
     }
 
-    public void saveDiagram(String username, Map<String, Object> diagram) {
+
+    public List<UserDiagram> listAllDiagrams(String username) {
+        File file = new File("users_diagrams.json");
+        List<UserDiagram> users = new ArrayList<>();
+        try {
+            users.addAll(mapper.readValue(file, new TypeReference<List<UserDiagram>>() {
+            }));
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+        return users.stream().filter(u -> u.username().equals(username)).toList();
+    }
+
+    public void saveDiagram(String id, Map<String, Object> diagram) {
         File file = new File("user_diagrams.json");
         try {
             List<UserDiagram> userDiagrams = mapper.readValue(file, new TypeReference<List<UserDiagram>>() {
             });
-            userDiagrams.removeIf(d -> d.username().equals(username));
-            userDiagrams.add(new UserDiagram(username, diagram));
+            UserDiagram d = userDiagrams.stream().filter(t -> t.id().equals(id)).findFirst().get();
+            userDiagrams.remove(d);
+            userDiagrams.add(new UserDiagram(d.id(), d.username(), diagram));
             mapper.writeValue(file, userDiagrams);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
     }
 
-    public UserDiagram getUserDiagram(String username) {
+    public UserDiagram getUserDiagram(String id) {
         File file = new File("user_diagrams.json");
         try {
             List<UserDiagram> userDiagrams = mapper.readValue(file, new TypeReference<List<UserDiagram>>() {
             });
-            Optional<UserDiagram> userDiagram = userDiagrams.stream().filter(d -> d.username().equals(username)).findFirst();
+            Optional<UserDiagram> userDiagram = userDiagrams.stream().filter(d -> d.id().equals(id)).findFirst();
             if (userDiagram.isPresent()) {
                 return userDiagram.get();
             }
-            throw new IllegalArgumentException("Diagram not found for username: " + username);
+            throw new IllegalArgumentException("Diagram not found for id: " + id);
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
