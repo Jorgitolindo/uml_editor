@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { DiagramComponent, DiagramModule, MarginModel, SymbolInfo, SymbolPaletteModule } from '@syncfusion/ej2-angular-diagrams';
 import {
@@ -13,6 +13,8 @@ import { ExpandMode } from '@syncfusion/ej2-navigations';
 import { UserService } from '../user.service';
 import { ActivatedRoute } from '@angular/router';
 import { ToolbarComponent } from "../toolbar/toolbar.component";
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
 Diagram.Inject(UndoRedo); // add support for history management
 
@@ -22,9 +24,12 @@ Diagram.Inject(UndoRedo); // add support for history management
   templateUrl: './diagram-editor.component.html',
   styleUrl: './diagram-editor.component.css'
 })
-export class DiagramEditorComponent implements OnInit {
-
+export class DiagramEditorComponent implements OnInit, OnDestroy {
   id: string = '';
+
+  private stompClient: any;
+  private isChangeOriginator = false;
+  private isProcessingIncomingChange = false;
 
   constructor(
     private userService: UserService,
@@ -33,6 +38,25 @@ export class DiagramEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Connect to the WebSocket server
+    const location = window.location;
+    const socket = new SockJS('http://' + location.host + '/ws');
+    this.stompClient = Stomp.over(socket);
+    this.stompClient.connect({}, () => {
+      this.stompClient.subscribe(`/topic/notifications`, (message: any) => {
+        this.isProcessingIncomingChange = true;
+        // Check if the message is from this client
+        if (this.isChangeOriginator) {
+          this.isChangeOriginator = false;
+          return; // Ignore messages sent by this client
+        }
+        this.diagram.loadDiagram(JSON.parse(message.body).diagram);
+        this.isProcessingIncomingChange = false;
+      });
+    }, (error: any) => {
+      console.log("Error connecting to WebSocket", error);
+    });
+    //
     this.activatedRoute.params.subscribe(params => {
       this.id = params['id'];
       this.userService.getDiagram(this.id).subscribe((d) => {
@@ -40,6 +64,12 @@ export class DiagramEditorComponent implements OnInit {
         console.log("Diagram received for id", this.id, d.diagram);
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.stompClient && this.stompClient.connected) {
+      this.stompClient.disconnect(() => { });
+    }
   }
 
   title = 'frontend';
@@ -376,9 +406,13 @@ export class DiagramEditorComponent implements OnInit {
   };
 
   private saveDiagram() {
+    if (this.isProcessingIncomingChange) {
+      return;
+    }
+    this.isChangeOriginator = true;
     const data = JSON.parse(this.diagram.saveDiagram());
     this.userService.saveDiagram(this.id, data).subscribe(() => {
-      console.log('Diagram sent to backend')
+      this.isChangeOriginator = false;
     })
   }
 
