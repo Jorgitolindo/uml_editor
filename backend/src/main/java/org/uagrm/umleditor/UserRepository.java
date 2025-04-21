@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 public class UserRepository {
@@ -46,18 +45,20 @@ public class UserRepository {
         return users.stream().filter(u -> u.username().equals(username)).toList();
     }
 
-    public void saveDiagram(String id, String username, Map<String, Object> diagram) {
+    public UserDiagram saveDiagram(String id, String username, Map<String, Object> diagram) {
         File file = new File("user_diagrams.json");
         try {
             List<UserDiagram> userDiagrams = mapper.readValue(file, new TypeReference<List<UserDiagram>>() {
             });
+            UserDiagram userDiagram = new UserDiagram(id, username, diagram);
             userDiagrams.stream().filter(t -> t.id().equals(id)).findFirst().ifPresent(d -> {
                 userDiagrams.remove(d);
             });
-            userDiagrams.add(new UserDiagram(id, username, diagram));
+            userDiagrams.add(userDiagram);
             mapper.writeValue(file, userDiagrams);
+            return userDiagram;
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            throw new IllegalArgumentException(e);
         }
     }
 

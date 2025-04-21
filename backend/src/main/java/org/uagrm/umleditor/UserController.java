@@ -56,7 +56,7 @@ public class UserController {
     @PostMapping("/users/diagrams/{id}")
     public void uploadDiagram(Principal principal, @PathVariable("id") String id, @RequestBody Map<String, Object> diagram) {
         log.info("Data received for diagram " + id);
-        userRepository.saveDiagram(id, principal.getName(), diagram);
+        UserDiagram d = userRepository.saveDiagram(id, principal.getName(), diagram);
     }
 
     @DeleteMapping("/users/diagrams/{id}")
