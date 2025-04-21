@@ -43,7 +43,9 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http
                 .authorizeHttpRequests((requests) ->
-                        requests.anyRequest().authenticated()
+                        requests.requestMatchers("/ws").permitAll()
+                                .requestMatchers("/ws/**").permitAll()
+                                .anyRequest().authenticated()
                 ).logout((logout) -> logout.permitAll())
                 .httpBasic(Customizer.withDefaults());
         return http.build();

@@ -3,6 +3,7 @@ package org.uagrm.umleditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -19,6 +20,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SimpMessagingTemplate template;
 
     @GetMapping("/login")
     public User login(Principal principal) {
@@ -57,11 +61,16 @@ public class UserController {
     public void uploadDiagram(Principal principal, @PathVariable("id") String id, @RequestBody Map<String, Object> diagram) {
         log.info("Data received for diagram " + id);
         UserDiagram d = userRepository.saveDiagram(id, principal.getName(), diagram);
+        this.notifyDiagramUpdate(d);
     }
 
     @DeleteMapping("/users/diagrams/{id}")
     public void deleteDiagram(@PathVariable("id") String id) {
         userRepository.deleteDiagram(id);
+    }
+
+    void notifyDiagramUpdate(UserDiagram d) {
+        this.template.convertAndSend("/topic/notifications", d);
     }
 
 }
