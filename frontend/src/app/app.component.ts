@@ -8,12 +8,15 @@ import {
   ConnectorModel,
   Connector,
   PaletteModel,
-  UmlClassifierShapeModel
+  UmlClassifierShapeModel,
+  IHistoryChangeArgs,
+  UndoRedo
 } from '@syncfusion/ej2-diagrams';
 import { ExpandMode } from '@syncfusion/ej2-navigations';
 import { User } from './user';
 import { UserService } from './user-service.service';
 
+Diagram.Inject(UndoRedo); // add support for history management
 
 @Component({
   selector: 'app-root',
@@ -349,7 +352,6 @@ export class AppComponent {
       arg.element.targetPoint.x += 100;
       arg.element.targetPoint.y += 20
     }
-
   }
   // Set an annoation style at runtime.
   public setNodeTemplate(node: any): void {
@@ -405,10 +407,15 @@ export class AppComponent {
     return { name: name, type: type };
   }
 
-  saveDiagram() {
+  private saveDiagram() {
     const data = JSON.parse(this.diagram.saveDiagram());
     this.userService.sendDiagram(this.currentUser!!.username!!, data).subscribe(() => {
       console.log('Diagram sent to backend')
     })
   }
+
+  historyChange(args: any): void {
+    this.saveDiagram();
+  }
+
 }

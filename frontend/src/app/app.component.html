@@ -8,11 +8,11 @@
           [symbolWidth]=90 [symbolMargin]="symbolMargin" [getNodeDefaults]='getSymbolDefaults'>
       </ejs-symbolpalette>
   </div>
-  <button (click)="saveDiagram()">Save diagram</button>
   <div id="diagram-space" class="sb-mobile-diagram">
     <ejs-diagram #diagram id="diagram" width="100%" height="100%" [getNodeDefaults]="getNodeDefaults"
       [getConnectorDefaults]="getConnectorDefaults" [setNodeTemplate]='setNodeTemplate' [nodes]='nodes'
-      [connectors]='connectors' (created)="created()" (dragEnter)="dragEnter($event)">
+      [connectors]='connectors' (created)="created()" (dragEnter)="dragEnter($event)"
+      (historyChange)="historyChange($event)">
     </ejs-diagram>
   </div>
 </div>
