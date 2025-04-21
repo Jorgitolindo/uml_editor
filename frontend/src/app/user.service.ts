@@ -23,7 +23,11 @@ export class UserService {
   }
 
   public createDiagram(username: string): Observable<UserDiagram> {
-    return this.http.post<UserDiagram>(this.usersUrl + `/${username}/diagrams`, { headers: this.authService.authHeaders() });
+    return this.http.post<UserDiagram>(this.usersUrl + `/${username}/diagrams`, {}, { headers: this.authService.authHeaders() });
+  }
+
+  public deleteDiagram(id: string): Observable<void> {
+    return this.http.delete<void>(this.usersUrl + `/diagrams/${id}`, { headers: this.authService.authHeaders() });
   }
 
   public saveDiagram(id: string, diagram: any): Observable<void> {

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 
 import { DiagramComponent, DiagramModule, MarginModel, SymbolInfo, SymbolPaletteModule } from '@syncfusion/ej2-angular-diagrams';
 import {
@@ -13,6 +13,7 @@ import { ExpandMode } from '@syncfusion/ej2-navigations';
 import { User } from '../user';
 import { UserService } from '../user.service';
 import { AuthenticationService } from '../auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 Diagram.Inject(UndoRedo); // add support for history management
 
@@ -22,26 +23,24 @@ Diagram.Inject(UndoRedo); // add support for history management
   templateUrl: './diagram-editor.component.html',
   styleUrl: './diagram-editor.component.css'
 })
-export class DiagramEditorComponent {
+export class DiagramEditorComponent implements OnInit {
 
-  @Input()
-  _id: string = '';
-
-  set id(id: string) {
-    this._id = id;
-    this.userService.getDiagram(id).subscribe((d) => {
-      this.diagram.loadDiagram(d.diagram);
-      console.log("Diagram received for id", this._id, d.diagram);
-    });
-  }
-
-  get id(): string {
-    return this._id;
-  }
+  id: string = '';
 
   constructor(
     private userService: UserService,
+    private activatedRoute: ActivatedRoute,
   ) {
+  }
+
+  ngOnInit(): void {
+    this.activatedRoute.params.subscribe(params => {
+      this.id = params['id'];
+      this.userService.getDiagram(this.id).subscribe((d) => {
+        this.diagram.loadDiagram(d.diagram);
+        console.log("Diagram received for id", this.id, d.diagram);
+      });
+    });
   }
 
   title = 'frontend';
@@ -379,7 +378,7 @@ export class DiagramEditorComponent {
 
   private saveDiagram() {
     const data = JSON.parse(this.diagram.saveDiagram());
-    this.userService.saveDiagram(this._id, data).subscribe(() => {
+    this.userService.saveDiagram(this.id, data).subscribe(() => {
       console.log('Diagram sent to backend')
     })
   }

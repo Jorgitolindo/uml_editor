@@ -1,15 +1,15 @@
 package org.uagrm.umleditor;
 
-import jakarta.websocket.server.PathParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.*;
-import java.util.random.RandomGenerator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -41,9 +41,9 @@ public class UserController {
     @PostMapping("/users/{username}/diagrams")
     @ResponseBody
     public UserDiagram createDiagram(@PathVariable("username") String username) {
-        String id = UUID.randomUUID().toString().substring(0, 10);
+        String id = UUID.randomUUID().toString();
         UserDiagram diagram = new UserDiagram(id, username, new HashMap<>());
-        userRepository.saveDiagram(id, new HashMap<>());
+        userRepository.saveDiagram(id, username, new HashMap<>());
         return diagram;
     }
 
@@ -54,9 +54,14 @@ public class UserController {
     }
 
     @PostMapping("/users/diagrams/{id}")
-    public void uploadDiagram(@PathVariable("id") String id, @RequestBody Map<String, Object> diagram) {
+    public void uploadDiagram(Principal principal, @PathVariable("id") String id, @RequestBody Map<String, Object> diagram) {
         log.info("Data received for diagram " + id);
-        userRepository.saveDiagram(id, diagram);
+        userRepository.saveDiagram(id, principal.getName(), diagram);
+    }
+
+    @DeleteMapping("/users/diagrams/{id}")
+    public void deleteDiagram(@PathVariable("id") String id) {
+        userRepository.deleteDiagram(id);
     }
 
 }

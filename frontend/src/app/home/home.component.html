@@ -1,6 +1,9 @@
 <h1>User diagrams - {{currentUser?.fullName}}</h1>
 
+<button (click)="createDiagram()">Create new diagram</button>
+
 <p *ngFor="let diagram of userDiagrams">
-  <span>{{diagram.id}}</span>
-  <span>{{diagram.name}}</span>
+  <span>Name: <strong>{{diagram.id}}</strong></span>
+  <span><a [routerLink]="['/editor', diagram.id]">Edit diagram</a></span>
+  <span><button (click)="deleteDiagram(diagram.id)">Delete diagram</button></span>
 </p>

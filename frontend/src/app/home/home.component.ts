@@ -3,10 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../auth.service';
 import { User } from '../user';
 import { UserService } from '../user.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -27,4 +28,15 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  createDiagram() {
+    this.userService.createDiagram(this.currentUser!!.username!!).subscribe((diagram) => {
+      this.userDiagrams.push(diagram);
+    });
+  }
+
+  deleteDiagram(id: string) {
+    this.userService.deleteDiagram(id).subscribe(() => {
+      this.userDiagrams = this.userDiagrams.filter(diagram => diagram.id !== id);
+    });
+  }
 }

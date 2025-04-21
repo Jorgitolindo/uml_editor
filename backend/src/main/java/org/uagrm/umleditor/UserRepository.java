@@ -35,7 +35,7 @@ public class UserRepository {
 
 
     public List<UserDiagram> listAllDiagrams(String username) {
-        File file = new File("users_diagrams.json");
+        File file = new File("user_diagrams.json");
         List<UserDiagram> users = new ArrayList<>();
         try {
             users.addAll(mapper.readValue(file, new TypeReference<List<UserDiagram>>() {
@@ -46,14 +46,28 @@ public class UserRepository {
         return users.stream().filter(u -> u.username().equals(username)).toList();
     }
 
-    public void saveDiagram(String id, Map<String, Object> diagram) {
+    public void saveDiagram(String id, String username, Map<String, Object> diagram) {
+        File file = new File("user_diagrams.json");
+        try {
+            List<UserDiagram> userDiagrams = mapper.readValue(file, new TypeReference<List<UserDiagram>>() {
+            });
+            userDiagrams.stream().filter(t -> t.id().equals(id)).findFirst().ifPresent(d -> {
+                userDiagrams.remove(d);
+            });
+            userDiagrams.add(new UserDiagram(id, username, diagram));
+            mapper.writeValue(file, userDiagrams);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    public void deleteDiagram(String id) {
         File file = new File("user_diagrams.json");
         try {
             List<UserDiagram> userDiagrams = mapper.readValue(file, new TypeReference<List<UserDiagram>>() {
             });
             UserDiagram d = userDiagrams.stream().filter(t -> t.id().equals(id)).findFirst().get();
             userDiagrams.remove(d);
-            userDiagrams.add(new UserDiagram(d.id(), d.username(), diagram));
             mapper.writeValue(file, userDiagrams);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
