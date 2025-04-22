@@ -1,5 +1,5 @@
 <app-toolbar></app-toolbar>
-<h1>User diagrams - {{currentUser?.fullName}}</h1>
+<!-- <h1>User diagrams - {{currentUser?.fullName}}</h1>
 
 <button (click)="createDiagram()">Create new diagram</button>
 
@@ -7,4 +7,23 @@
   <span>Name: <strong>{{diagram.id}}</strong></span>
   <span><a [routerLink]="['/editor', diagram.id]">Edit diagram</a></span>
   <span><button (click)="deleteDiagram(diagram.id)">Delete diagram</button></span>
-</p>
+</p> -->
+
+<div class="user-diagrams-container">
+  <h1 class="title">Diagramas de {{ currentUser?.fullName }}</h1>
+
+  <div class="actions">
+    <button class="btn btn-primary" (click)="createDiagram()">➕ Crear nuevo diagrama</button>
+  </div>
+
+  <div class="diagram-card" *ngFor="let diagram of userDiagrams">
+    <div class="diagram-info">
+      <strong>ID:</strong> {{ diagram.id }}
+    </div>
+    <div class="diagram-actions">
+      <a [routerLink]="['/editor', diagram.id]" class="btn btn-link">✏️ Editar</a>
+      <button class="btn btn-danger" (click)="deleteDiagram(diagram.id)">🗑️ Eliminar</button>
+    </div>
+  </div>
+</div>
+

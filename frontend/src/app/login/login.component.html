@@ -1,13 +1,17 @@
-<h2>Login</h2>
-<form (ngSubmit)="onSubmit()">
-    <div>
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" [(ngModel)]="username" required>
-    </div>
-    <div>
+<div class="login-wrapper">
+  <div class="login-card">
+    <h2>Login</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="input-group">
+        <label for="username">Email</label>
+        <input type="text" id="username" name="username" [(ngModel)]="username" required />
+      </div>
+      <div class="input-group">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" [(ngModel)]="password" required>
-    </div>
-    <button type="submit">Login</button>
-    <div *ngIf="error">{{error}}</div>
-</form>
+        <input type="password" id="password" name="password" [(ngModel)]="password" required />
+      </div>
+      <button type="submit">LOG IN</button>
+      <div *ngIf="error" class="error-message">{{ error }}</div>
+    </form>
+  </div>
+</div>
