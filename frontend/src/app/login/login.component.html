@@ -13,5 +13,14 @@
       <button type="submit">LOG IN</button>
       <div *ngIf="error" class="error-message">{{ error }}</div>
     </form>
+
+    <!-- 🔽 Botón para ir al registro -->
+    <div style="text-align: center; margin-top: 1rem;">
+      <span>¿No tienes una cuenta?</span>
+      <br />
+      <button (click)="goToRegister()" style="margin-top: 0.5rem; background: none; border: none; color: #007bff; cursor: pointer;">
+        Regístrate aquí
+      </button>
+    </div>
   </div>
 </div>

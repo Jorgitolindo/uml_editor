@@ -26,13 +26,13 @@ public class UserRepository {
     @Autowired
     private InMemoryUserDetailsManager userDetailsManager;
 
-    public void saveUser(User u) {
+   /* public void saveUser(User u) {
         userDetailsManager.createUser(org.springframework.security.core.userdetails.User.withDefaultPasswordEncoder()
                 .username(u.username())
                 .password(u.password())
                 .roles("USER")
                 .build());
-    }
+    }*/
 
     public List<User> listAll() {
         File file = new File("users.json");
@@ -103,4 +103,16 @@ public class UserRepository {
             throw new IllegalArgumentException(e);
         }
     }
+
+    public void addUser(User user) {
+        File file = new File("users.json");
+        try {
+            List<User> users = mapper.readValue(file, new TypeReference<List<User>>() {});
+            users.add(user);
+            mapper.writeValue(file, users);
+        } catch (IOException e) {
+            log.error("Error al guardar usuario nuevo", e);
+        }
+    }
+
 }

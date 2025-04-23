@@ -1,12 +1,17 @@
 [
   {
-    "username":"alejandro.calderon",
-    "fullName": "Alejandro Calderon Leon",
-    "password": "1234"
+    "username": "alejandro.calderon",
+    "password": "1234",
+    "fullName": "Alejandro Calderon Leon"
   },
   {
-    "username":"rolando.martinez",
-    "fullName": "Rolando Martinez",
-    "password": "1234"
+    "username": "rolando.martinez",
+    "password": "1234",
+    "fullName": "Rolando Martinez"
+  },
+  {
+    "username": "junito@gmail.com",
+    "password": "12345",
+    "fullName": "juanito alcachofa"
   }
 ]

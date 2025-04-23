@@ -20,6 +20,8 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserAuthService userAuthService;
 
     @Autowired
     private SimpMessagingTemplate template;
@@ -31,6 +33,7 @@ public class UserController {
                 .filter(d -> d.username().equals(principal.getName()))
                 .findFirst().get();
     }
+
 
     @GetMapping("/users")
     public List<User> getUsers() {
@@ -64,6 +67,8 @@ public class UserController {
         this.notifyDiagramUpdate(d);
     }
 
+
+
     @DeleteMapping("/users/diagrams/{id}")
     public void deleteDiagram(@PathVariable("id") String id) {
         userRepository.deleteDiagram(id);
@@ -71,6 +76,20 @@ public class UserController {
 
     void notifyDiagramUpdate(UserDiagram d) {
         this.template.convertAndSend("/topic/notifications", d);
+    }
+
+
+    @PostMapping("/register")
+    public User register(@RequestBody Map<String, String> userData) {
+        String username = userData.get("username");
+        String password = userData.get("password");
+        String fullName = userData.get("fullName");
+
+        User newUser = new User(username, password, fullName);
+        userRepository.addUser(newUser);          // ✅ Guarda en users.json
+        userAuthService.saveUser(newUser);        // ✅ Agrega al InMemoryUserDetailsManager
+
+        return newUser;
     }
 
 }

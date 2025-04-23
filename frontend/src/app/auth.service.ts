@@ -40,4 +40,15 @@ export class AuthenticationService {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
+
+  register(username: string, password: string, fullName: string): Observable<any> {
+    const newUser = {
+      username,
+      password,
+      fullName
+    };
+
+    return this.http.post('/api/register', newUser);
+  }
+
 }

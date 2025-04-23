@@ -15,6 +15,7 @@ import { ToolbarComponent } from "../toolbar/toolbar.component";
 export class HomeComponent implements OnInit {
   currentUser?: User;
   userDiagrams: any[] = [];
+  
 
   constructor(
     private userService: UserService,
@@ -40,4 +41,7 @@ export class HomeComponent implements OnInit {
       this.userDiagrams = this.userDiagrams.filter(diagram => diagram.id !== id);
     });
   }
+
+
+
 }

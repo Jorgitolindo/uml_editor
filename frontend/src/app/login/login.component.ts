@@ -31,4 +31,8 @@ export class LoginComponent {
         this.router.navigate(['/']);
       });
   }
+
+  goToRegister() {
+    this.router.navigate(['/register']);
+  }
 }
