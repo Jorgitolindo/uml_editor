@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -19,6 +22,17 @@ public class UserRepository {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private ObjectMapper mapper = new ObjectMapper();
+
+    @Autowired
+    private InMemoryUserDetailsManager userDetailsManager;
+
+    public void saveUser(User u) {
+        userDetailsManager.createUser(org.springframework.security.core.userdetails.User.withDefaultPasswordEncoder()
+                .username(u.username())
+                .password(u.password())
+                .roles("USER")
+                .build());
+    }
 
     public List<User> listAll() {
         File file = new File("users.json");
