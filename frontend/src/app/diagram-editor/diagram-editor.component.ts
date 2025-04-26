@@ -1,4 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 import { DiagramComponent, DiagramModule, MarginModel, SymbolInfo, SymbolPaletteModule } from '@syncfusion/ej2-angular-diagrams';
 import {
@@ -30,6 +32,9 @@ export class DiagramEditorComponent implements OnInit, OnDestroy {
   private stompClient: any;
   private isChangeOriginator = false;
   private isProcessingIncomingChange = false;
+  /** Subject que acumula cambios y dispara el guardado tras 500 ms de inactividad */
+  private saveSubject = new Subject<any>();
+  private lastSavedJson: string | null = null;
 
   constructor(
     private userService: UserService,
@@ -38,33 +43,56 @@ export class DiagramEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Connect to the WebSocket server
-    const location = window.location;
-    const socket = new SockJS(location.protocol + '//' + location.host + '/ws');
+    // 1) Conectar al servidor SockJS vía proxy
+    const socket = new SockJS('/ws');
     this.stompClient = Stomp.over(socket);
     this.stompClient.connect({}, () => {
+      // 2) Suscribirse al topic
       this.stompClient.subscribe(`/topic/notifications`, (message: any) => {
-        this.isProcessingIncomingChange = true;
-        // Check if the message is from this client
-        if (this.isChangeOriginator) {
-          this.isChangeOriginator = false;
-          return; // Ignore messages sent by this client
+        const payload = JSON.parse(message.body);
+        const remoteJson = JSON.stringify(payload.diagram);
+
+        // 3) Si coincide con nuestro último guardado, lo descartamos
+        if (this.lastSavedJson === remoteJson) {
+          this.lastSavedJson = null;
+          return;
         }
-        this.diagram.loadDiagram(JSON.parse(message.body).diagram);
-        this.isProcessingIncomingChange = false;
+
+        // 4) Si no es nuestro propio cambio, lo cargamos
+        this.diagram.loadDiagram(payload.diagram);
       });
     }, (error: any) => {
       console.log("Error connecting to WebSocket", error);
     });
-    //
+
+    // 5) Carga inicial del diagrama vía REST
     this.activatedRoute.params.subscribe(params => {
       this.id = params['id'];
-      this.userService.getDiagram(this.id).subscribe((d) => {
+      this.userService.getDiagram(this.id).subscribe(d => {
         this.diagram.loadDiagram(d.diagram);
         console.log("Diagram received for id", this.id, d.diagram);
       });
     });
+
+    // 6) Debounce + guardado diferido
+    this.saveSubject
+      .pipe(debounceTime(500))
+      .subscribe(diagramData => {
+        // 6.1) Guardamos el JSON para filtrar en la suscripción WS
+        this.lastSavedJson = JSON.stringify(diagramData);
+
+        // 6.2) POST al backend
+        this.userService.saveDiagram(this.id, diagramData)
+          .subscribe({
+            next: () => {
+              // Liberamos la marca de origen
+              this.isChangeOriginator = false;
+            },
+            error: err => console.error('Error guardando diagrama:', err)
+          });
+      });
   }
+
 
   ngOnDestroy(): void {
     if (this.stompClient && this.stompClient.connected) {
@@ -417,7 +445,16 @@ export class DiagramEditorComponent implements OnInit, OnDestroy {
   }
 
   historyChange(args: any): void {
-    this.saveDiagram();
+    if (this.isProcessingIncomingChange) {
+      return;
+    }
+    this.isChangeOriginator = true;
+
+    setTimeout(() => {
+      const data = JSON.parse(this.diagram.saveDiagram());
+      this.saveSubject.next(data);
+    });
   }
+
 
 }
