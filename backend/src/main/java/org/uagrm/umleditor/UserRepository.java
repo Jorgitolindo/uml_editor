@@ -62,19 +62,30 @@ public class UserRepository {
     public UserDiagram saveDiagram(String id, String username, Map<String, Object> diagram) {
         File file = new File("user_diagrams.json");
         try {
-            List<UserDiagram> userDiagrams = mapper.readValue(file, new TypeReference<List<UserDiagram>>() {
-            });
-            UserDiagram userDiagram = new UserDiagram(id, username, diagram);
-            userDiagrams.stream().filter(t -> t.id().equals(id)).findFirst().ifPresent(d -> {
-                userDiagrams.remove(d);
-            });
-            userDiagrams.add(userDiagram);
+            // 1) Leemos todos los diagramas
+            List<UserDiagram> userDiagrams = mapper.readValue(
+                    file, new TypeReference<List<UserDiagram>>() {});
+            // 2) Buscamos si ya existía uno con este ID
+            Optional<UserDiagram> existing = userDiagrams.stream()
+                    .filter(d -> d.id().equals(id))
+                    .findFirst();
+            // 3) Determinamos el owner: si existía, lo mantenemos; si no, es quien crea por primera vez
+            String owner = existing
+                    .map(UserDiagram::username)
+                    .orElse(username);
+            // 4) Creamos el nuevo objeto con el owner correcto
+            UserDiagram updated = new UserDiagram(id, owner, diagram);
+            // 5) Reemplazamos la versión anterior (si la había)
+            existing.ifPresent(userDiagrams::remove);
+            userDiagrams.add(updated);
+            // 6) Volvemos a escribir el JSON
             mapper.writeValue(file, userDiagrams);
-            return userDiagram;
+            return updated;
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
     }
+
 
     public void deleteDiagram(String id) {
         File file = new File("user_diagrams.json");

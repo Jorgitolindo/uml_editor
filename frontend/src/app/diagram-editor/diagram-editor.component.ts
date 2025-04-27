@@ -46,50 +46,50 @@ export class DiagramEditorComponent implements OnInit, OnDestroy {
     // 1) Conectar al servidor SockJS vía proxy
     const socket = new SockJS('/ws');
     this.stompClient = Stomp.over(socket);
-    this.stompClient.connect({}, () => {
-      // 2) Suscribirse al topic
-      this.stompClient.subscribe(`/topic/notifications`, (message: any) => {
-        const payload = JSON.parse(message.body);
-        const remoteJson = JSON.stringify(payload.diagram);
 
-        // 3) Si coincide con nuestro último guardado, lo descartamos
-        if (this.lastSavedJson === remoteJson) {
-          this.lastSavedJson = null;
-          return;
-        }
-
-        // 4) Si no es nuestro propio cambio, lo cargamos
-        this.diagram.loadDiagram(payload.diagram);
-      });
-    }, (error: any) => {
-      console.log("Error connecting to WebSocket", error);
-    });
-
-    // 5) Carga inicial del diagrama vía REST
+    // 2) Antes de suscribirte, asegúrate de capturar el ID de la ruta
     this.activatedRoute.params.subscribe(params => {
       this.id = params['id'];
+
+      // 3) Suscribirse al topic global
+      this.stompClient.connect({}, () => {
+        this.stompClient.subscribe(`/topic/notifications`, (message: any) => {
+          const payload = JSON.parse(message.body) as { id: string;username: string; diagram: any };
+
+          // 🔍 Filtra solo los mensajes de *tu* diagrama
+          if (payload.id !== this.id) {
+            return;
+          }
+
+          this.lastEditor = payload.username;
+          const remoteJson = JSON.stringify(payload.diagram);
+
+          // 4) Si coincide con nuestro último guardado, lo descartamos
+          if (this.lastSavedJson === remoteJson) {
+            this.lastSavedJson = null;
+            return;
+          }
+
+          // 5) Carga el diagrama remoto
+          this.diagram.loadDiagram(payload.diagram);
+        });
+      }, (error: any) => {
+        console.error("Error connecting to WebSocket", error);
+      });
+
+      // 6) Carga inicial del diagrama vía REST
       this.userService.getDiagram(this.id).subscribe(d => {
         this.diagram.loadDiagram(d.diagram);
         console.log("Diagram received for id", this.id, d.diagram);
       });
     });
 
-    // 6) Debounce + guardado diferido
-    this.saveSubject
-      .pipe(debounceTime(500))
+    // 7) Mantén tu lógica de debounce/autosave igual…
+    this.saveSubject.pipe(debounceTime(500))
       .subscribe(diagramData => {
-        // 6.1) Guardamos el JSON para filtrar en la suscripción WS
         this.lastSavedJson = JSON.stringify(diagramData);
-
-        // 6.2) POST al backend
         this.userService.saveDiagram(this.id, diagramData)
-          .subscribe({
-            next: () => {
-              // Liberamos la marca de origen
-              this.isChangeOriginator = false;
-            },
-            error: err => console.error('Error guardando diagrama:', err)
-          });
+          .subscribe(() => this.isChangeOriginator = false);
       });
   }
 
@@ -392,7 +392,7 @@ export class DiagramEditorComponent implements OnInit, OnDestroy {
 
   public connectors: ConnectorModel[] = [
   ];
-
+  public lastEditor: string = '';
   // Set the default values of nodes.
   public getNodeDefaults(obj: NodeModel): NodeModel {
     obj.style = { fill: '#26A0DA', strokeColor: 'white' };

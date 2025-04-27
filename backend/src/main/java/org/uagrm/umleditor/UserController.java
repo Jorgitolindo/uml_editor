@@ -64,7 +64,16 @@ public class UserController {
     public void uploadDiagram(Principal principal, @PathVariable("id") String id, @RequestBody Map<String, Object> diagram) {
         log.info("Data received for diagram " + id);
         UserDiagram d = userRepository.saveDiagram(id, principal.getName(), diagram);
-        this.notifyDiagramUpdate(d);
+        // 2) Construimos un payload que lleve al editor actual:
+        Map<String,Object> msg = Map.of(
+                "id",      d.id(),
+                "username", principal.getName(),   // <-- aquí ponemos EL EDITOR
+                "diagram", d.diagram()
+        );
+
+        // 3) Publicamos ese msg por STOMP en /topic/notifications
+        template.convertAndSend("/topic/notifications", msg);
+
     }
 
 
@@ -75,7 +84,8 @@ public class UserController {
     }
 
     void notifyDiagramUpdate(UserDiagram d) {
-        this.template.convertAndSend("/topic/notifications", d);
+        // Antes:
+         template.convertAndSend("/topic/notifications", d);
     }
 
 
