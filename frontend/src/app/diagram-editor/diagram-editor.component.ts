@@ -1,4 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 import { DiagramComponent, DiagramModule, MarginModel, SymbolInfo, SymbolPaletteModule } from '@syncfusion/ej2-angular-diagrams';
 import {
@@ -30,6 +32,9 @@ export class DiagramEditorComponent implements OnInit, OnDestroy {
   private stompClient: any;
   private isChangeOriginator = false;
   private isProcessingIncomingChange = false;
+  /** Subject que acumula cambios y dispara el guardado tras 500 ms de inactividad */
+  private saveSubject = new Subject<any>();
+  private lastSavedJson: string | null = null;
 
   constructor(
     private userService: UserService,
@@ -38,33 +43,56 @@ export class DiagramEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Connect to the WebSocket server
-    const location = window.location;
-    const socket = new SockJS(location.protocol + '//' + location.host + '/ws');
+    // 1) Conectar al servidor SockJS vía proxy
+    const socket = new SockJS('/ws');
     this.stompClient = Stomp.over(socket);
-    this.stompClient.connect({}, () => {
-      this.stompClient.subscribe(`/topic/notifications`, (message: any) => {
-        this.isProcessingIncomingChange = true;
-        // Check if the message is from this client
-        if (this.isChangeOriginator) {
-          this.isChangeOriginator = false;
-          return; // Ignore messages sent by this client
-        }
-        this.diagram.loadDiagram(JSON.parse(message.body).diagram);
-        this.isProcessingIncomingChange = false;
-      });
-    }, (error: any) => {
-      console.log("Error connecting to WebSocket", error);
-    });
-    //
+
+    // 2) Antes de suscribirte, asegúrate de capturar el ID de la ruta
     this.activatedRoute.params.subscribe(params => {
       this.id = params['id'];
-      this.userService.getDiagram(this.id).subscribe((d) => {
+
+      // 3) Suscribirse al topic global
+      this.stompClient.connect({}, () => {
+        this.stompClient.subscribe(`/topic/notifications`, (message: any) => {
+          const payload = JSON.parse(message.body) as { id: string;username: string; diagram: any };
+
+          // 🔍 Filtra solo los mensajes de *tu* diagrama
+          if (payload.id !== this.id) {
+            return;
+          }
+
+          this.lastEditor = payload.username;
+          const remoteJson = JSON.stringify(payload.diagram);
+
+          // 4) Si coincide con nuestro último guardado, lo descartamos
+          if (this.lastSavedJson === remoteJson) {
+            this.lastSavedJson = null;
+            return;
+          }
+
+          // 5) Carga el diagrama remoto
+          this.diagram.loadDiagram(payload.diagram);
+        });
+      }, (error: any) => {
+        console.error("Error connecting to WebSocket", error);
+      });
+
+      // 6) Carga inicial del diagrama vía REST
+      this.userService.getDiagram(this.id).subscribe(d => {
         this.diagram.loadDiagram(d.diagram);
         console.log("Diagram received for id", this.id, d.diagram);
       });
     });
+
+    // 7) Mantén tu lógica de debounce/autosave igual…
+    this.saveSubject.pipe(debounceTime(500))
+      .subscribe(diagramData => {
+        this.lastSavedJson = JSON.stringify(diagramData);
+        this.userService.saveDiagram(this.id, diagramData)
+          .subscribe(() => this.isChangeOriginator = false);
+      });
   }
+
 
   ngOnDestroy(): void {
     if (this.stompClient && this.stompClient.connected) {
@@ -364,7 +392,7 @@ export class DiagramEditorComponent implements OnInit, OnDestroy {
 
   public connectors: ConnectorModel[] = [
   ];
-
+  public lastEditor: string = '';
   // Set the default values of nodes.
   public getNodeDefaults(obj: NodeModel): NodeModel {
     obj.style = { fill: '#26A0DA', strokeColor: 'white' };
@@ -417,7 +445,16 @@ export class DiagramEditorComponent implements OnInit, OnDestroy {
   }
 
   historyChange(args: any): void {
-    this.saveDiagram();
+    if (this.isProcessingIncomingChange) {
+      return;
+    }
+    this.isChangeOriginator = true;
+
+    setTimeout(() => {
+      const data = JSON.parse(this.diagram.saveDiagram());
+      this.saveSubject.next(data);
+    });
   }
+
 
 }

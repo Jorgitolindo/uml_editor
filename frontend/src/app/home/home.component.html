@@ -23,6 +23,15 @@
     <div class="diagram-actions">
       <a [routerLink]="['/editor', diagram.id]" class="btn btn-link">✏️ Editar</a>
       <button class="btn btn-danger" (click)="deleteDiagram(diagram.id)">🗑️ Eliminar</button>
+
+
+      <button
+      class="btn btn-secondary"
+      style="margin-left: 0.5rem;"
+      (click)="shareDiagram(diagram.id)"
+    >
+      📋 Compartir
+    </button>
     </div>
   </div>
 </div>

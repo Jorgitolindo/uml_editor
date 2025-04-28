@@ -15,7 +15,7 @@ import { ToolbarComponent } from "../toolbar/toolbar.component";
 export class HomeComponent implements OnInit {
   currentUser?: User;
   userDiagrams: any[] = [];
-  
+
 
   constructor(
     private userService: UserService,
@@ -40,6 +40,21 @@ export class HomeComponent implements OnInit {
     this.userService.deleteDiagram(id).subscribe(() => {
       this.userDiagrams = this.userDiagrams.filter(diagram => diagram.id !== id);
     });
+  }
+
+  shareDiagram(id: string) {
+    // 1) Construye la URL completa de edición
+    const url = window.location.origin + '/editor/' + id;
+    // 2) Copia al portapapeles
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        // 3) Feedback rápido
+        alert('🔗 Link copiado:\n' + url);
+      })
+      .catch(err => {
+        console.error('Error copiando link: ', err);
+        alert('❌ No se pudo copiar el link');
+      });
   }
 
 

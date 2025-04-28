@@ -62,3 +62,9 @@
     display: block;
     right: 15px;
 }
+
+.editor-info {
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  color: #666;
+}
