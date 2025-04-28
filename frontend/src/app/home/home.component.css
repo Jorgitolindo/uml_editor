@@ -82,3 +82,13 @@
 .btn-link:hover {
   background-color: #117a8b;
 }
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: #fff;
+}
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
