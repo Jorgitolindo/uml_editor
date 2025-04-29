@@ -38,4 +38,4 @@ jobs:
         username: ${{ secrets.USER }}
         password: ${{ secrets.PASSWD }}
         script: |
-          sh uml_editor/run.sh
+          cd uml_editor && sh run.sh
