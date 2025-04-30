@@ -1,0 +1,91 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { EyeIcon, PencilIcon, TrashIcon, UserPlusIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+
+const CanvaList = ({ canvas = [], onEdit, onDelete, onInvite }) => {
+  // Si no hay tableros, mostrar mensaje amigable
+  if (canvas.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="mx-auto h-24 w-24 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+          <ChartBarIcon  className="h-12 w-12 text-blue-600" />
+        </div>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">No hay tableros disponibles</h3>
+        <p className="text-gray-500">Crea tu primer tablero para comenzar</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {canvas.map((canva) => (
+        <div
+          key={canva.id}
+          className="bg-white rounded-xl shadow-lg border border-blue-100 overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
+        >
+          <div className="p-5">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-900 truncate">
+                  {canva.description || 'Tablero sin nombre'}
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  Creado por: <span className="text-blue-600">{canva.ownerName || 'Usuario'}</span>
+                </p>
+                {canva.createdAt && (
+                  <p className="text-xs text-gray-400 mt-1">
+                    {new Date(canva.createdAt?.toDate?.()).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+              
+              {canva.isHost && (
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => onEdit?.(canva)}
+                    className="p-1.5 hover:bg-blue-50 rounded-lg text-blue-600 hover:text-blue-800 transition-all duration-200"
+                    aria-label="Editar tablero"
+                    title="Editar tablero"
+                  >
+                    <PencilIcon className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => onDelete?.(canva.id)}
+                    className="p-1.5 hover:bg-red-50 rounded-lg text-red-600 hover:text-red-700 transition-all duration-200"
+                    aria-label="Eliminar tablero"
+                    title="Eliminar tablero"
+                  >
+                    <TrashIcon className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-5 flex gap-2">
+              <Link
+                to={`/canvas/${canva.id}`}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+              >
+                <EyeIcon className="w-5 h-5" />
+                Ver tablero
+              </Link>
+              
+              {canva.isHost && (
+                <button
+                  onClick={() => onInvite?.(canva)}
+                  className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 hover:text-blue-800 transition-all duration-200 border border-blue-200"
+                  aria-label="Invitar colaboradores"
+                  title="Invitar colaboradores"
+                >
+                  <UserPlusIcon className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default React.memo(CanvaList);
