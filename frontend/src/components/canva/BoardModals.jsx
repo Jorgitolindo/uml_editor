@@ -44,22 +44,23 @@ const CanvaModals = ({
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <DialogPanel className="w-full max-w-md rounded-2xl bg-white shadow-2xl overflow-hidden">
           {/* Encabezado del Modal con gradiente */}
-          <div className="bg-gradient-to-r from-green-600 to-indigo-600 p-5">
-            <div className="flex justify-between items-center">
-              <DialogTitle className="text-xl font-bold text-white">
-                {modalType === 'create' && 'Nuevo Tablero'}
-                {modalType === 'edit' && 'Editar Tablero'}
-                {modalType === 'invite' && 'Invitar Colaboradores'}
-              </DialogTitle>
-              <button
-                onClick={closeModals}
-                className="p-1 rounded-full hover:bg-white/10 text-white transition-colors"
-                aria-label="Cerrar modal"
-              >
-                <XMarkIcon className="w-6 h-6" />
-              </button>
-            </div>
-          </div>
+          <div className="bg-gradient-to-r from-amber-800 to-amber-600 p-5 rounded-t-lg">
+  <div className="flex justify-between items-center">
+    <DialogTitle className="text-xl font-bold text-white">
+      {modalType === 'create' && 'Nuevo Tablero'}
+      {modalType === 'edit'   && 'Editar Tablero'}
+      {modalType === 'invite' && 'Invitar Colaboradores'}
+    </DialogTitle>
+    <button
+      onClick={closeModals}
+      className="p-1 rounded-full hover:bg-white/20 text-white transition-colors"
+      aria-label="Cerrar modal"
+      title="Cerrar modal"
+    >
+      <XMarkIcon className="w-6 h-6" />
+    </button>
+  </div>
+</div>
 
           {/* Contenido del Modal */}
           <div className="p-6">
@@ -134,13 +135,22 @@ const CanvaModals = ({
                 </div>
 
                 <div className="space-y-4">
-                  <button
-                    onClick={handleCopyLink}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-600 to-indigo-600 text-white rounded-lg hover:from-green-700 hover:to-indigo-700 transition-all shadow-md"
-                  >
-                    <LinkIcon className="w-5 h-5" />
-                    Copiar enlace del tablero
-                  </button>
+                <button
+  onClick={handleCopyLink}
+  className="
+    w-full flex items-center justify-center gap-2
+    px-4 py-3
+    bg-gradient-to-r from-amber-800 to-amber-600
+    hover:from-amber-900 hover:to-amber-700
+    text-white
+    rounded-lg
+    shadow-md hover:shadow-lg
+    transition-all duration-200
+  "
+>
+  <LinkIcon className="w-5 h-5" />
+  Copiar enlace del tablero
+</button>
 
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center" aria-modal="true">

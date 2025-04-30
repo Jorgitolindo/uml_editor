@@ -38,7 +38,7 @@ const CanvaList = ({ canvas = [], onEdit, onDelete, onInvite }) => {
                   </p>
                 )}
               </div>
-              
+
               {canva.isHost && (
                 <div className="flex gap-1">
                   <button
@@ -61,26 +61,47 @@ const CanvaList = ({ canvas = [], onEdit, onDelete, onInvite }) => {
               )}
             </div>
 
-            <div className="mt-5 flex gap-2">
-              <Link
-                to={`/canvas/${canva.id}`}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
-              >
-                <EyeIcon className="w-5 h-5" />
-                Ver tablero
-              </Link>
-              
-              {canva.isHost && (
-                <button
-                  onClick={() => onInvite?.(canva)}
-                  className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 hover:text-blue-800 transition-all duration-200 border border-blue-200"
-                  aria-label="Invitar colaboradores"
-                  title="Invitar colaboradores"
-                >
-                  <UserPlusIcon className="w-5 h-5" />
-                </button>
-              )}
-            </div>
+            <div className="mt-5 flex flex-wrap gap-3">
+  <Link
+    to={`/canvas/${canva.id}`}
+    className="
+      flex-1 flex items-center justify-center gap-2
+      px-6 py-3
+      bg-gradient-to-r from-amber-800 to-amber-600
+      hover:from-amber-900 hover:to-amber-700
+      text-white
+      rounded-full
+      shadow-lg hover:shadow-2xl
+      border-2 border-amber-700      /* borde más grueso */
+      transition transform hover:scale-105
+    "
+  >
+    <EyeIcon className="w-5 h-5" />
+    <span className="font-medium">Ver Diagrama</span>
+  </Link>
+
+  {canva.isHost && (
+    <button
+      onClick={() => onInvite?.(canva)}
+      aria-label="Invitar colaboradores"
+      title="Invitar colaboradores"
+      className="
+        p-3
+        bg-amber-100
+        text-amber-700
+        border-2 border-amber-400   /* borde más marcado */
+        rounded-full
+        hover:bg-amber-200
+        hover:scale-105
+        transition
+      "
+    >
+      <UserPlusIcon className="w-5 h-5" />
+    </button>
+  )}
+</div>
+
+
           </div>
         </div>
       ))}

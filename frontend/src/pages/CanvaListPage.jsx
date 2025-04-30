@@ -284,10 +284,16 @@ const CanvaListPage = () => {
       <div className="max-w-7xl mx-auto mt-16">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-3">
-              <ChartBarIcon className="w-8 h-8 text-blue-600" />
-              <span>Mis Tableros</span>
-            </h1>
+          <h1
+  className="flex items-center gap-3 text-3xl md:text-4xl font-semibold text-gray-800"
+  style={{ fontFamily: 'Poppins, sans-serif' }}
+>
+  <ChartBarIcon className="w-8 h-8 text-amber-600 drop-shadow-sm" />
+  <span className="uppercase tracking-wide border-b-2 border-amber-600 pb-1">
+    Mis Diagramas
+  </span>
+</h1>
+
             <p className="text-gray-500 mt-1">
               {canvas.length} {canvas.length === 1 ? "tablero" : "tableros"}{" "}
               encontrados
@@ -295,14 +301,22 @@ const CanvaListPage = () => {
           </div>
 
           <button
-            onClick={() => setModalType("create")}
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-3 rounded-xl flex items-center gap-2 transition-all shadow-lg hover:shadow-xl active:scale-[0.98]"
-          >
-            <PlusIcon className="w-5 h-5" />
-            <span className="text-sm sm:text-base font-semibold">
-              Nuevo Tablero
-            </span>
-          </button>
+  onClick={() => setModalType("create")}
+  className="
+    bg-gradient-to-r from-amber-800 to-amber-600
+    hover:from-amber-900 hover:to-amber-700
+    text-white
+    px-6 py-3
+    rounded-full
+    flex items-center gap-2
+    text-base font-semibold
+    shadow-lg hover:shadow-2xl
+    transition duration-200 transform hover:scale-105 active:scale-95
+  "
+>
+  <PlusIcon className="w-5 h-5" />
+  <span>Nuevo Diagrama</span>
+</button>
         </div>
 
         <CanvaList
