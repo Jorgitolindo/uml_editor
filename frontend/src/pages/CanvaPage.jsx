@@ -65,7 +65,7 @@ const CanvaPage = () => {
     className="flex items-center text-white hover:text-amber-200 transition-colors"
   >
     <ArrowLeft className="mr-2" />
-    Back
+    retornar
   </button>
 
   <h1 className="text-xl font-semibold text-white">
