@@ -46,7 +46,7 @@ const CanvaModals = ({
           <div className="relative bg-gradient-to-r from-amber-800 to-amber-600 p-6">
             <DialogTitle className="text-2xl font-bold text-center text-white">
               {modalType === 'create' && 'Nuevo Tablero'}
-              {modalType === 'edit'   && 'Editar Tablero'}
+              {modalType === 'edit'   && 'Editar Nombre del Diagrama'}
               {modalType === 'invite' && 'Invitar Colaboradores'}
             </DialogTitle>
             <button

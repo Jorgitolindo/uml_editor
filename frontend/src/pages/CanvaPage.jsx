@@ -69,7 +69,7 @@ const CanvaPage = () => {
   </button>
 
   <h1 className="text-xl font-semibold text-white">
-    Primer Parcial Software
+    Pizarra Colaborativa SW1
   </h1>
 
   <UsersPanel collaborators={collaborators} currentUser={user.email} />

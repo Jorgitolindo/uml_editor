@@ -188,7 +188,7 @@ const CanvaListPage = () => {
   const handleDeleteCanva = async (canvaId) => {
     try {
       const result = await Swal.fire({
-        title: "¿Eliminar tablero?",
+        title: "¿Eliminar Diagrama?",
         text: "¡Esta acción no se puede revertir!",
         icon: "warning",
         showCancelButton: true,
