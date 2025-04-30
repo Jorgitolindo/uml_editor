@@ -275,8 +275,18 @@ ${Object.keys(angularProject.components)
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white w-[min(90vw,900px)] max-h-[90vh] rounded-lg shadow-xl flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-amber-900/30">
+    <div
+      className="
+        bg-gradient-to-br from-amber-50 to-amber-100
+        w-[min(90vw,900px)]
+        max-h-[90vh]
+        rounded-2xl
+        shadow-2xl
+        border-2 border-black-300
+        flex flex-col
+      "
+    >
         <header className="p-4 border-b flex items-center">
           <h2 className="font-semibold flex-1">Generated code</h2>
           <button
@@ -297,7 +307,7 @@ ${Object.keys(angularProject.components)
             onClick={() => setActiveTab("html")}
           >
             <FileText size={16} className="inline mr-1" />
-            HTML
+
           </button>
           <button
             className={`px-4 py-2 text-sm font-medium ${
@@ -318,8 +328,8 @@ ${Object.keys(angularProject.components)
             }`}
             onClick={() => setActiveTab("js")}
           >
-            <Cpu size={16} className="inline mr-1" />
-            JS
+            <Cpu size={16} className="inline mr-150" />
+.
           </button>
           <button
             className={`px-4 py-2 text-sm font-medium ${

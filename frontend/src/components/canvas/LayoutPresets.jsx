@@ -42,20 +42,28 @@ const presets = [
 
 const LayoutPresets = ({ onAddPreset }) => {
   return (
-    <div className="p-4 border-b">
-      <h3 className="font-medium text-sm mb-3">Layout Presets</h3>
+    <div className="p-4 border-b border-black bg-amber-50">
+      <h3 className="font-medium text-sm mb-3 text-gray-800">Layout Presets</h3>
       <div className="grid grid-cols-2 gap-3">
         {presets.map((preset) => (
           <button
             key={preset.type}
             onClick={() => onAddPreset(preset.type)}
-            className="border rounded p-3 hover:bg-gray-50 transition-colors text-left flex flex-col"
+            className="
+              border-2 border-black
+              rounded-xl p-3
+              hover:bg-amber-100
+              transition-colors
+              text-left flex flex-col
+            "
           >
             <div className="flex items-center mb-2">
-              <div className="mr-2 text-blue-500">{preset.icon}</div>
-              <span className="font-medium text-sm">{preset.name}</span>
+              <div className="mr-2 text-amber-600">{preset.icon}</div>
+              <span className="font-medium text-sm text-gray-800">
+                {preset.name}
+              </span>
             </div>
-            <p className="text-xs text-gray-500 mt-1">{preset.description}</p>
+            <p className="text-xs text-gray-600 mt-1">{preset.description}</p>
           </button>
         ))}
       </div>
@@ -63,4 +71,4 @@ const LayoutPresets = ({ onAddPreset }) => {
   );
 };
 
-export default LayoutPresets;
+export default React.memo(LayoutPresets);

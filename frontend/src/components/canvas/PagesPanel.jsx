@@ -20,12 +20,12 @@ const PagesPanel = ({
   };
 
   return (
-    <div className="border-b p-4">
+    <div className="border-b border-black-200 bg-amber-50 p-4">
       <div className="flex justify-between items-center mb-3">
-        <h3 className="font-medium text-sm">Pages</h3>
+        <h3 className="font-medium text-sm text-gray-800">Pages</h3>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50"
+          className="text-amber-600 hover:text-amber-800 p-1 rounded-full hover:bg-amber-100 transition"
         >
           <Plus size={18} />
         </button>
@@ -38,12 +38,12 @@ const PagesPanel = ({
             value={newPageName}
             onChange={(e) => setNewPageName(e.target.value)}
             placeholder="Page name"
-            className="flex-1 p-2 border rounded text-sm"
+            className="flex-1 p-2 border border-black-300 rounded text-sm focus:ring-2 focus:ring-amber-600 focus:border-black-600 transition"
             onKeyDown={(e) => e.key === "Enter" && handleAddPage()}
           />
           <button
             onClick={handleAddPage}
-            className="bg-blue-600 text-white px-3 rounded text-sm hover:bg-blue-700"
+            className="bg-amber-600 text-white px-3 rounded text-sm hover:bg-amber-700 transition"
           >
             Add
           </button>
@@ -54,21 +54,24 @@ const PagesPanel = ({
         {pages.map((page) => (
           <div
             key={page.id}
-            className={`flex items-center justify-between p-2 rounded cursor-pointer ${
-              page.id === activePage
-                ? "bg-blue-50 text-blue-700"
-                : "hover:bg-gray-50"
-            }`}
             onClick={() => onChangePage(page.id)}
+            className={`
+              flex items-center justify-between p-2 rounded cursor-pointer
+              ${
+                page.id === activePage
+                  ? "bg-amber-100 text-amber-700"
+                  : "hover:bg-amber-50"
+              }
+            `}
           >
-            <span className="truncate text-sm">{page.title}</span>
+            <span className="truncate text-sm text-gray-800">{page.title}</span>
             {pages.length > 1 && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onRemovePage(page.id);
                 }}
-                className="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-red-50"
+                className="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-red-50 transition"
               >
                 <X size={16} />
               </button>

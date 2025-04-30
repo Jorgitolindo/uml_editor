@@ -53,20 +53,27 @@ const CanvaPage = () => {
   return (
     <ErrorBoundary>
       <div className="flex flex-col h-screen bg-gray-50">
-        <header className="flex items-center justify-between p-4 bg-white border-b">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center text-blue-600 hover:text-blue-800"
-          >
-            <ArrowLeft className="mr-2" />
-            Back
-          </button>
+      <header
+  className="
+    flex items-center justify-between p-4
+    bg-gradient-to-br from-amber-900 via-amber-700 to-amber-500
+    shadow-lg
+  "
+>
+  <button
+    onClick={() => navigate(-1)}
+    className="flex items-center text-white hover:text-amber-200 transition-colors"
+  >
+    <ArrowLeft className="mr-2" />
+    Back
+  </button>
 
-          <h1 className="text-xl font-semibold">Primer Parcial Software</h1>
+  <h1 className="text-xl font-semibold text-white">
+    Primer Parcial Software
+  </h1>
 
-          <UsersPanel collaborators={collaborators} currentUser={user.email} />
-        </header>
-
+  <UsersPanel collaborators={collaborators} currentUser={user.email} />
+</header>
         <div className="flex flex-1 overflow-hidden">
           <CanvasComponent
             canvaId={canvaId}

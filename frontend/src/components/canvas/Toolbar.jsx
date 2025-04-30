@@ -207,15 +207,33 @@ const Toolbar = ({
   /* ─── render ─────────────────────────────────────────────────── */
   return (
     <aside
-      className={`${TW_WIDTH} bg-white shadow-lg flex flex-col relative z-10 border-r border-gray-200`}
+      className={`
+        ${TW_WIDTH}
+        bg-amber-100           /* fondo madera claro */
+        shadow-lg
+        flex flex-col
+        relative z-10
+        border-r border-black-200  /* línea divisoria en tono madera */
+        p-4                   /* espaciado extra opcional */
+      `}
     >
       {/* logo */}
-      <div className="py-4 flex justify-center border-b border-gray-100">
-        <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-xl px-6 py-2 flex items-center justify-center font-bold text-lg shadow-md">
-          <span className="mr-2">Flow</span>
+      <div className="py-4 flex justify-center border-b border-amber-200">
+        <div
+          className="
+            bg-gradient-to-br from-amber-800 to-amber-600
+            text-white
+            rounded-xl
+            px-6 py-2
+            flex items-center justify-center
+            font-bold text-lg
+            shadow-md
+          "
+        >
+          <span className="mr-2">Toolbar</span>
           <Box size={18} />
         </div>
-      </div>
+</div>
 
       {/* navigation tools */}
       <ToolbarSection title="Navigation">
