@@ -74,7 +74,7 @@ const CanvaList = ({ canvas = [], onEdit, onDelete, onInvite }) => {
   title="Eliminar tablero"
 >
   <TrashIcon className="w-5 h-5" />
-  <span>Del</span>
+  <span>Delete</span>
 </button>
                 </div>
               )}
