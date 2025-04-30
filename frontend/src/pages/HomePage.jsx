@@ -4,21 +4,41 @@ import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-blue-100 via-white to-blue-100">
-      <div className="bg-white bg-opacity-80 backdrop-blur-xl rounded-3xl shadow-2xl p-10 text-center max-w-2xl mx-4">
-        <h1 className="text-5xl font-extrabold mb-6 text-gray-900">
-          Bienvenido a un Figma Colaborativo
-        </h1>
-        <p className="text-xl mb-8 text-gray-700">
-          Desata tu creatividad y crea la página web perfecta para compartir tus ideas.
-        </p>
-        <Link
-          to="/canvas"
-          className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full text-white text-lg font-semibold shadow-md transform hover:scale-105 transition duration-300 ease-in-out"
-        >
-          Empezar
-          <ArrowRightIcon className="h-6 w-6" />
-        </Link>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-amber-100 px-4">
+      <div className="w-full max-w-6xl bg-white bg-opacity-80 backdrop-blur-lg rounded-3xl shadow-2xl p-16">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12">
+          {/* Texto */}
+          <div className="flex-1 space-y-6">
+            <h1 className="text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight">
+              Welcome
+            </h1>
+            <p className="text-xl text-gray-800">
+              Desata tu creatividad y crea el diagrama perfecto para compartir tus ideas.
+            </p>
+            <Link
+              to="/canvas"
+              className="
+                inline-flex items-center gap-3
+                px-10 py-4
+                bg-gradient-to-r from-amber-800 to-amber-600
+                hover:from-amber-900 hover:to-amber-700
+                text-white text-lg font-semibold
+                rounded-full
+                shadow-lg
+                transition transform hover:scale-105
+              "
+            >
+              Empezar
+              <ArrowRightIcon className="h-6 w-6" />
+            </Link>
+          </div>
+
+          {/* Imagen / placeholder */}
+          <div className="flex-1">
+            {/* Aquí podrías poner una ilustración */}
+            <div className="w-full h-80 bg-amber-200 rounded-2xl shadow-inner animate-pulse" />
+          </div>
+        </div>
       </div>
     </div>
   );
