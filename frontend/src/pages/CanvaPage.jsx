@@ -82,7 +82,7 @@ const CanvaPage = () => {
             onSave={saveChanges}
           />
 
-          <div className="w-80 bg-white border-l flex flex-col">
+          <div className="w-40 bg-white border-l flex flex-col">
             <div className="flex border-b">
               <button
                 className={`flex-1 py-2 text-sm font-medium ${

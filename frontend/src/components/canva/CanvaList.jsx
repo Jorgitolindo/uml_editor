@@ -17,8 +17,7 @@ const CanvaList = ({ canvas = [], onEdit, onDelete, onInvite }) => {
   }
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {canvas.map((canva) => (
+<div className="flex flex-col space-y-6">      {canvas.map((canva) => (
         <div
           key={canva.id}
           className="bg-white rounded-xl shadow-lg border border-blue-100 overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
@@ -75,7 +74,7 @@ const CanvaList = ({ canvas = [], onEdit, onDelete, onInvite }) => {
   title="Eliminar tablero"
 >
   <TrashIcon className="w-5 h-5" />
-  <span></span>
+  <span>Del</span>
 </button>
                 </div>
               )}

@@ -434,7 +434,7 @@ const PropertyPanel = ({ selectedElement, onChange }) => {
   };
 
   return (
-    <div className="w-64 bg-amber-100 border-l-1 border-black-300 p-4 overflow-y-auto">
+    <div className="w-30 bg-amber-100 border-l-1 border-black-300 p-4 overflow-y-auto">
   <h3 className="font-medium text-sm mb-3 flex items-center text-gray-800 border-b border-amber-200 pb-2">
     <span className="capitalize">{selectedElement.type}</span>
     <span className="ml-auto text-xs text-gray-500">
