@@ -34,7 +34,7 @@ const Navbar = () => {
 
   // Verificar si estamos en la ruta /canvas/:canvaId
   const isCanvasPage = /^\/canvas\/[^/]+$/.test(location.pathname);
-  
+
   // Si estamos en la página del canvas, no renderizar el navbar
   if (isCanvasPage) {
     return null;
@@ -62,11 +62,11 @@ const Navbar = () => {
       {/* Main container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          
+
           {/* Logo */}
           <div className="flex items-center flex-shrink-0">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="text-white text-2xl font-bold tracking-tight transition-all duration-300 hover:scale-105 flex items-center"
             >
               <svg className="h-8 w-8 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -96,7 +96,7 @@ const Navbar = () => {
                   isActive('/canvas') ? 'bg-white/20 shadow-inner' : 'hover:bg-white/10'
                 }`}
               >
-                Mis Diagramas
+                Mis Diagrams
               </Link>
             )}
 
@@ -139,7 +139,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile menu */}
-      <div 
+      <div
         className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
           isOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
         }`}
