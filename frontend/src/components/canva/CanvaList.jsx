@@ -41,22 +41,42 @@ const CanvaList = ({ canvas = [], onEdit, onDelete, onInvite }) => {
 
               {canva.isHost && (
                 <div className="flex gap-1">
-                  <button
-                    onClick={() => onEdit?.(canva)}
-                    className="p-1.5 hover:bg-blue-50 rounded-lg text-blue-600 hover:text-blue-800 transition-all duration-200"
-                    aria-label="Editar tablero"
-                    title="Editar tablero"
-                  >
-                    <PencilIcon className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => onDelete?.(canva.id)}
-                    className="p-1.5 hover:bg-red-50 rounded-lg text-red-600 hover:text-red-700 transition-all duration-200"
-                    aria-label="Eliminar tablero"
-                    title="Eliminar tablero"
-                  >
-                    <TrashIcon className="w-5 h-5" />
-                  </button>
+                 <button
+  onClick={() => onEdit?.(canva)}
+  className="
+    flex items-center gap-2
+    px-3 py-1.5
+    bg-gradient-to-r from-amber-800 to-amber-600
+    hover:from-amber-900 hover:to-amber-700
+    text-white font-medium
+    rounded-full
+    shadow-sm hover:shadow-md
+    transition transform hover:-translate-y-0.5
+  "
+  aria-label="Editar tablero"
+  title="Editar tablero"
+>
+  <PencilIcon className="w-5 h-5" />
+  <span>Editar</span>
+</button>
+<button
+  onClick={() => onDelete?.(canva.id)}
+  className="
+    flex items-center gap-2
+    px-3 py-1.5
+    bg-gradient-to-r from-teal-600 to-teal-400
+    hover:from-teal-700 hover:to-teal-500
+    text-white font-medium
+    rounded-full
+    shadow-sm hover:shadow-md
+    transition transform hover:-translate-y-0.5
+  "
+  aria-label="Eliminar tablero"
+  title="Eliminar tablero"
+>
+  <TrashIcon className="w-5 h-5" />
+  <span></span>
+</button>
                 </div>
               )}
             </div>
